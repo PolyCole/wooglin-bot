@@ -1,0 +1,22 @@
+{
+  "name": "wooglin-bot",
+  "version": "1.0.0",
+  "description": "The Slackbot interacting with users in the BTP AZ workspace.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WooglinAlphaZeta/wooglin-bot.git"
+  },
+  "author": "Cole Polyak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WooglinAlphaZeta/wooglin-bot/issues"
+  },
+  "homepage": "https://github.com/WooglinAlphaZeta/wooglin-bot#readme",
+  "dependencies": {
+    "serverless-python-requirements": "^5.1.0"
+  }
+}

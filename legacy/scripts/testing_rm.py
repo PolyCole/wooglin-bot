@@ -1,4 +1,4 @@
-import wooglin
+from source import wooglin
 
 while(True):
     message = input("Please input your message for the bot: ")
