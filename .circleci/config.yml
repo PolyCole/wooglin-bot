@@ -1,7 +1,18 @@
 # Javascript Node CircleCI 2.0 configuration file
 
 version: 2
+orbs:
+   aws-cli: circleci/aws-cli@1.0
+   serverless: circleci/serverless-framework@1.0
 jobs:
+  preflight:
+    executor: serverless/default
+    steps:
+      - checkout
+      - aws-cli/setup
+      - serverless/setup
+      - run: sls deploy
+
   build:
     working_directory: ~/wooglin-bot
 
@@ -53,3 +64,8 @@ jobs:
       - run:
           name: Deploy application
           command: sls deploy -v
+workflows:
+  preflight_and_build:
+    jobs:
+      - preflight
+      - build
