@@ -14,8 +14,6 @@
 
      steps:
        - checkout
-       - aws-cli/setup
-       - serverless/setup
 
        # Download and cache dependencies
        - restore_cache:
