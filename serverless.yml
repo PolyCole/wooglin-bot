@@ -66,6 +66,13 @@ functions:
 plugins:
   - serverless-python-requirements
 
+# exclude the code coverage files and circle ci files
+package:
+  exclude:
+  - .coverage
+  - cover/**
+  - .circleci/**
+
 custom:
   pythonRequirements:
     dockerizePip: non-linux
