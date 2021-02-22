@@ -42,9 +42,15 @@ package:
   - .circleci/**
 
 functions:
-  botapi:
-    handler: source/handler.wooglin_handler
+  slack-hook:
+    handler: source/slack_handler.slack_handler
     events:
       - http:
-          path: /
+          path: /slackhook
+          method: any
+  twilio-hook:
+    handler: source/twilio_handler.twilio_handler
+    events:
+      - http:
+          path: /twiliohook
           method: any

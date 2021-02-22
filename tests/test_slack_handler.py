@@ -1,14 +1,15 @@
 import unittest
-from source.handler import wooglin_handler
+from source.slack_handler import slack_handler
 
-class TestHelloWorld(unittest.TestCase):
+
+class TestSlackHandler(unittest.TestCase):
 
     """ test the handler code """
     def test_hello_world(self):
         event = {}
         context = {}
 
-        resp = wooglin_handler(event, context)
+        resp = slack_handler(event, context)
         self.assertEqual(resp["statusCode"], 200)
 
 
