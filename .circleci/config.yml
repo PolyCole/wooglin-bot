@@ -1,86 +1,60 @@
 # Javascript Node CircleCI 2.0 configuration file
-version: 2.1
-orbs:
-   aws-cli: circleci/aws-cli@1.0
-   serverless: circleci/serverless-framework@1.0
-jobs:
+
+ version: 2
+ orbs:
+    aws-cli: circleci/aws-cli@1.0
+    serverless: circleci/serverless-framework@1.0
+ jobs:
    build:
-     executor: serverless/default
+     working_directory: ~/wooglin-bot
+
+     docker:
+       # specify the version you desire here
+       - image: circleci/python:3.8.5
+
      steps:
        - checkout
        - aws-cli/setup
        - serverless/setup
-       - run: sls deploy 
-workflows:
-  one_and_two:
-    jobs:
-      - build
 
-# version: 2
-# orbs:
-#    aws-cli: circleci/aws-cli@1.0
-#    serverless: circleci/serverless-framework@1.0
-# jobs:
-#   preflight:
-#     executor: serverless/default
-#     steps:
-#       - checkout
-#       - aws-cli/setup
-#       - serverless/setup
-#       - run: sls deploy
-#   build:
-#     working_directory: ~/wooglin-bot
+       # Download and cache dependencies
+       - restore_cache:
+           keys:
+             - dependencies-node-{{ checksum "package.json" }}
+             # fallback to using the latest cache if no exact match is found
+             - dependencies-node
 
-#     docker:
-#       # specify the version you desire here
-#       - image: circleci/python:3.8.5
+       - run:
+           name: Install python test dependencies
+           command: |
+             sudo pip install nose
+             sudo pip install coverage
+       # this is slow. build a custom docker image and use that
+       - run:
+           name: Install node and npm
+           command: |
+             curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+             sudo apt-get install -y nodejs
+             node --version && npm -v
 
-#     steps:
-#       - checkout
+       - run:
+           name: Install Serverless CLI and dependencies
+           command: |
+             sudo npm i -g serverless
+             npm install
 
-#       # Download and cache dependencies
-#       - restore_cache:
-#           keys:
-#             - dependencies-node-{{ checksum "package.json" }}
-#             # fallback to using the latest cache if no exact match is found
-#             - dependencies-node
+       - save_cache:
+           paths:
+             - node_modules
+           key: dependencies-node-{{ checksum "package.json" }}
 
-#       - run:
-#           name: Install python test dependencies
-#           command: |
-#             sudo pip install nose
-#             sudo pip install coverage
-#       # this is slow. build a custom docker image and use that
-#       - run:
-#           name: Install node and npm
-#           command: |
-#             curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-#             sudo apt-get install -y nodejs
-#             node --version && npm -v
+       # run tests
+       - run:
+           name: Run tests with code coverage
+           command: |
+             nosetests --with-coverage
 
-#       - run:
-#           name: Install Serverless CLI and dependencies
-#           command: |
-#             sudo npm i -g serverless
-#             npm install
-
-#       - save_cache:
-#           paths:
-#             - node_modules
-#           key: dependencies-node-{{ checksum "package.json" }}
-
-#       # run tests
-#       - run:
-#           name: Run tests with code coverage
-#           command: |
-#             nosetests --with-coverage
-
-#       # deploy app
-#       - run:
-#           name: Deploy application
-#           command: sls deploy -v
-# workflows:
-#   preflight_and_build:
-#     jobs:
-#       - preflight
-#       - build
+       # deploy app
+       - run:
+           name: Deploy application
+           command: sls deploy -v
