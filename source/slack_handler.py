@@ -29,6 +29,11 @@ def slack_handler(event, context):
                 "message": "Events originating outside of slack are not allowed.",
                 "statusCode": 401
             }
+    else:
+        return {
+            "message": "Requests must contain a valid verification token.",
+            "statusCode": 400
+        }
 
     # Handles initial challenge with Slack's verification.
     if "challenge" in event:
