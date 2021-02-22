@@ -1,5 +1,5 @@
 import unittest
-from handler import hello
+from source.handler import wooglin_handler
 
 class TestHelloWorld(unittest.TestCase):
 
@@ -8,7 +8,7 @@ class TestHelloWorld(unittest.TestCase):
         event = {}
         context = {}
 
-        resp = hello(event, context)
+        resp = wooglin_handler(event, context)
         self.assertEqual(resp["statusCode"], 200)
 
 
