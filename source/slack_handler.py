@@ -16,6 +16,8 @@ def slack_handler(event, context):
     print("Event object received:")
     print(event)
 
+    event = event['body']
+
     global SLACK_CHANNEL
 
     # Verifying that our requests are actually coming from slack.
