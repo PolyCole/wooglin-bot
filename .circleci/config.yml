@@ -1,58 +1,197 @@
-# Javascript Node CircleCI 2.0 configuration file
+version: 2.1
 
- version: 2
- orbs:
-    aws-cli: circleci/aws-cli@1.0
-    serverless: circleci/serverless-framework@1.0
- jobs:
-   build:
-     working_directory: ~/wooglin-bot
+orbs:
+  aws-cli: circleci/aws-cli@1.0
+  serverless: circleci/serverless-framework@1.0
+  slack: circleci/slack@4.1
 
-     docker:
-       # specify the version you desire here
-       - image: circleci/python:3.8.5
+jobs:
+  build:
+    working_directory: ~/wooglin-bot
 
-     steps:
-       - checkout
+    docker:
+      # specify the version you desire here
+      - image: circleci/python:3.8.5
 
-       # Download and cache dependencies
-       - restore_cache:
-           keys:
-             - dependencies-node-{{ checksum "package.json" }}
-             # fallback to using the latest cache if no exact match is found
-             - dependencies-node
+    steps:
+      - checkout
 
-       - run:
-           name: Install python test dependencies
-           command: |
-             sudo pip install nose
-             sudo pip install coverage
-       # this is slow. build a custom docker image and use that
-       - run:
-           name: Install node and npm
-           command: |
-             curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-             sudo apt-get install -y nodejs
-             node --version && npm -v
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - dependencies-node-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-node
 
-       - run:
-           name: Install Serverless CLI and dependencies
-           command: |
-             sudo npm i -g serverless
-             npm install
+      - run:
+          name: Install python test dependencies
+          command: |
+            sudo pip install nose
+            sudo pip install coverage
+      # this is slow. build a custom docker image and use that
+      - run:
+          name: Install node and npm
+          command: |
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            node --version && npm -v
 
-       - save_cache:
-           paths:
-             - node_modules
-           key: dependencies-node-{{ checksum "package.json" }}
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            npm install
 
-       # run tests
-       - run:
-           name: Run tests with code coverage
-           command: |
-             nosetests --with-coverage
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-node-{{ checksum "package.json" }}
 
-       # deploy app
-       - run:
-           name: Deploy application
-           command: sls deploy -v
+      # run tests
+      - run:
+          name: Run tests with code coverage
+          command: |
+            nosetests --with-coverage
+
+      # deploy app
+      - run:
+          name: Deploy application
+          command: sls deploy -v
+
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          custom: |
+            {
+                "blocks": [
+                    {
+                        "type": "header",
+                        "text": {
+                            "type": "plain_text",
+                            "text": ":robot_face: Wooglin-bot Deployment Successful! :tada:",
+                            "emoji": true
+                        }
+                    },
+                    {
+                        "type": "section",
+                        "fields": [
+                            {
+                                "type": "mrkdwn",
+                                "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": "*When*:\n$(date +'%m/%d/%Y %T')"
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": "*Tag*:\n$CIRCLE_TAG"
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": "*Branch*:\n$CIRCLE_BRANCH"
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": "*Author*:\n$CIRCLE_USERNAME"
+                            }
+                        ],
+                        "accessory": {
+                            "type": "image",
+                            "image_url": "https://i.imgur.com/olHpRLd.jpg",
+                            "alt_text": "Wooglin CI Success Logo"
+                        }
+                    },
+                    {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "View Job"
+                                },
+                                "url": "${CIRCLE_BUILD_URL}"
+                            }
+                        ]
+                    }
+                ]
+            }
+          event: pass
+      - slack/notify:
+          channel: $SLACK_DEFAULT_CHANNEL
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": ":robot_face: Wooglin-bot Deployment Failed :red_circle:",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Job*: ${CIRCLE_JOB}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n$CIRCLE_PROJECT_REPONAME"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*When*:\n$(date +'%m/%d/%Y %T')"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\n$CIRCLE_BRANCH"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n$CIRCLE_USERNAME"
+                    }
+                  ],
+                  "accessory": {
+                    "type": "image",
+                    "image_url": "https://i.imgur.com/CXDfXUB.jpg",
+                    "alt_text": "Wooglin CI Failure Logo"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Mentions*:\n$SLACK_PARAM_MENTIONS"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+          event: fail
+
+workflows:
+  main:
+    jobs:
+      - build
