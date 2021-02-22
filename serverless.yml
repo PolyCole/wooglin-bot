@@ -14,7 +14,6 @@
 service: wooglin-bot
 # app and org for use with dashboard.serverless.com
 app: wooglin-bot
-org: wooglinaz
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -76,8 +75,12 @@ package:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  botapi:
+    handler: source/handler.wooglin_handler
+    events:
+      - http:
+          path: /
+          method: any
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
