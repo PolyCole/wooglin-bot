@@ -14,7 +14,7 @@
 service: wooglin-bot
 # app and org for use with dashboard.serverless.com
 app: wooglin-bot
-org: polycole
+org: wooglinaz
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -24,6 +24,23 @@ provider:
   name: aws
   runtime: python3.8
   lambdaHashingVersion: 20201221
+
+# serverless.yml
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+# exclude the code coverage files and circle ci files
+package:
+  exclude:
+  - .coverage
+  - cover/**
+  - .circleci/**
+
 
 # you can overwrite defaults here
 #  stage: dev
@@ -61,21 +78,6 @@ provider:
 functions:
   hello:
     handler: handler.hello
-
-
-plugins:
-  - serverless-python-requirements
-
-# exclude the code coverage files and circle ci files
-package:
-  exclude:
-  - .coverage
-  - cover/**
-  - .circleci/**
-
-custom:
-  pythonRequirements:
-    dockerizePip: non-linux
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
