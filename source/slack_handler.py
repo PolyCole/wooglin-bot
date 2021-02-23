@@ -34,6 +34,8 @@ def slack_handler(event, context):
                 "message": "Events originating outside of slack are not allowed.",
                 "statusCode": 401
             }
+        else:
+            print("Token verification has succeeded. The request came from slack.")
     else:
         return {
             "message": "Requests must contain a valid verification token.",
@@ -42,7 +44,8 @@ def slack_handler(event, context):
 
     # Handles initial challenge with Slack's verification.
     if "challenge" in event:
-        return event["challenge"]
+        print("Challenge found in object, returning challenge value.")
+        return {"challenge": event['challenge']}
 
     # Getting the slack data of the event.
     slack_event = event['event']
