@@ -24,8 +24,12 @@ def slack_handler(event, context):
     global SLACK_CHANNEL
 
     # Verifying that our requests are actually coming from slack.
+    print("Type of event: " + type(event))
+    print("Event: " + event)
+    print("Type of SLACK_VERIFICATION_TOKEN: ")
+
     if "token" in event:
-        if event['token'] != os.environ['SLACK_VERIFICATION_TOKEN']:
+        if event['token'] != os.environ["SLACK_VERIFICATION_TOKEN"]:
             print("VERIFICATION FOR SLACK FAILED.")
             print("This request didn't come from slack, telling sender to kindly go away.")
             return {
