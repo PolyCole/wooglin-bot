@@ -4,6 +4,7 @@ import sys
 import logging
 import re
 import urllib
+import json
 
 # Bot authorization token from slack.
 BOT_TOKEN = os.environ["BOT_TOKEN"]
@@ -19,7 +20,7 @@ def slack_handler(event, context):
     event = event['body']
 
     if type(event) is str:
-        event = dict(event)
+        event = json.loads(event)
 
     global SLACK_CHANNEL
 
