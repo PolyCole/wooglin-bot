@@ -124,7 +124,7 @@ def mentions_me(text):
 
     mentioned = 0
     for x in range(0, len(identities)):
-        if text.find(identities[0] != -1):
+        if text.find(identities[0]) != -1:
             mentioned += 1
 
     # TODO Write extra logic here to determine what to do if an identity collision occurs.
