@@ -4,6 +4,7 @@ import sys
 import logging
 import re
 import urllib
+import json
 
 # Bot authorization token from slack.
 BOT_TOKEN = os.environ["BOT_TOKEN"]
@@ -19,19 +20,22 @@ def slack_handler(event, context):
     event = event['body']
 
     if type(event) is str:
-        event = dict(event)
+        event = json.loads(event)
 
     global SLACK_CHANNEL
 
     # Verifying that our requests are actually coming from slack.
     if "token" in event:
-        if event['token'] != os.environ['SLACK_VERIFICATION_TOKEN']:
+        token = os.environ["SLACK_VERIFICATION_TOKEN"].split(",")
+        if event['token'] != token[0] and event['token'] != token[1]:
             print("VERIFICATION FOR SLACK FAILED.")
             print("This request didn't come from slack, telling sender to kindly go away.")
             return {
                 "message": "Events originating outside of slack are not allowed.",
                 "statusCode": 401
             }
+        else:
+            print("Token verification has succeeded. The request came from slack.")
     else:
         return {
             "message": "Requests must contain a valid verification token.",
@@ -40,7 +44,19 @@ def slack_handler(event, context):
 
     # Handles initial challenge with Slack's verification.
     if "challenge" in event:
-        return event["challenge"]
+        response_body = {
+            "challenge": event['challenge'],
+            "input": event
+        }
+
+        response = {
+            "statusCode": 200,
+            "headers": {},
+            "body": json.dumps(response_body)
+        }
+
+        print("Responding to slack challenge with: " + json.dumps(response))
+        return response
 
     # Getting the slack data of the event.
     slack_event = event['event']

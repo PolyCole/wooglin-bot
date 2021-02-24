@@ -49,6 +49,7 @@ functions:
       - http:
           path: /slackhook
           method: any
+          cors: true
   twilio-hook:
     handler: source/twilio_handler.twilio_handler
     events:
