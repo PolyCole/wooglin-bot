@@ -44,8 +44,19 @@ def slack_handler(event, context):
 
     # Handles initial challenge with Slack's verification.
     if "challenge" in event:
-        print("Challenge found in object, returning challenge value.")
-        return {"challenge": event['challenge']}
+        response_body = {
+            "challenge": event['challenge'],
+            "input": event
+        }
+
+        response = {
+            "statusCode": 200,
+            "headers": {},
+            "body": json.dumps(response_body)
+        }
+
+        print("Responding to slack challenge with: " + json.dumps(response))
+        return response
 
     # Getting the slack data of the event.
     slack_event = event['event']
