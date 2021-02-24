@@ -22,3 +22,12 @@ def populate_environment():
         os.environ[key] = value
 
     print("Successfully loaded environment variables from secrets.json.")
+
+
+def get_request_object():
+    return {
+        'resource': '/slackhook',
+        'httpMethod': 'POST',
+        'headers': {},
+        'isBase64Encoded': False
+    }
