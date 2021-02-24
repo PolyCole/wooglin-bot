@@ -19,7 +19,7 @@ def slack_handler(event, context):
 
     # Ensures we get the body of the request in a format we can work with.
     if type(event_body) is str:
-        event_body = json.loads(event)
+        event_body = json.loads(event_body)
 
     global SLACK_CHANNEL
 
