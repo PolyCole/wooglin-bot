@@ -4,9 +4,6 @@ import re
 import requests
 import json
 
-# Bot authorization token from slack.
-BOT_TOKEN = os.environ["BOT_TOKEN"]
-
 # Sending our replies here.
 SLACK_URL = "https://slack.com/api/chat.postMessage"
 
@@ -120,20 +117,7 @@ def get_response_object(event, message="Slack message has been successfully hand
 
 # Checks to see if the bot's @ tag is included in the message.
 def mentions_me(text):
-    identities = os.environ['MY_ID'].split(",")
-
-    mentioned = 0
-    for x in range(0, len(identities)):
-        if text.find(identities[0]) != -1:
-            mentioned += 1
-
-    # TODO Write extra logic here to determine what to do if an identity collision occurs.
-    # Back of the napkin math suggests this is EXCEEDINGLY unlikely ~ hypothetically 1/36^9
-    if mentioned > 1:
-        sendmessage("Identity collision.")
-        raise Exception("We have a collision with identities. Aborting. Also, buy a lottery ticket.")
-
-    return mentioned == 1
+    return text.find(os.environ['MY_ID']) != -1
 
 
 # Removes the Bot's @ tag from the message for cleaner parsing.
