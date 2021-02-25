@@ -98,6 +98,8 @@ def predefined_message_check(text, slack_event):
 # Handles all messages that aren't predefined via wooglin-nlu.
 def process_message(text, slack_event):
     nlu_response = get_nlu_response(text)
+    print("nlu_response:")
+    print(nlu_response)
 
     user = slack_event['user']
 
@@ -123,7 +125,7 @@ def process_message(text, slack_event):
         notify_cole("NLU was confused on the following text. ", slack_event, get_nlu_confused_error_block(nlu_response))
         return "NLU Confused"
     elif action == "greet":
-        return sendmessage(GreetUser.greet(user))
+        return sendmessage(greet(user))
     # elif action == "database":
     #     DatabaseHandler.dbhandler(resp, user)
     # elif action == "sms":
