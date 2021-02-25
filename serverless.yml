@@ -26,6 +26,8 @@ provider:
     TWILIO_SMS_URL: ${param:TWILIO_SMS_URL}
     TWILIO_TOKEN: ${param:TWILIO_TOKEN}
     TWILIO_VERIFICATION_TOKEN: ${param:TWILIO_VERIFICATION_TOKEN}
+    COLE_DM: ${param:COLE_DM}
+    NLU_ADDRESS: ${param:NLU_ADDRESS}
 
 
 plugins:
