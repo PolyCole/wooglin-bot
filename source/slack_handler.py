@@ -1,5 +1,6 @@
 import logging
 import re
+import traceback
 from source.util.error_block_builder import *
 from source.util.informational_block_builder import *
 from source.GreetUser import *
@@ -92,6 +93,8 @@ def predefined_message_check(text, slack_event):
         else:
             return process_message(text, slack_event)
     except Exception as e:
+        print("ERROR TRACEBACK:")
+        print(traceback.print_exc())
         return sendmessage("I've encountered an error: " + str(e))
 
 
