@@ -178,12 +178,15 @@ def strip_text(text):
 def sendmessage(message, blocks=None):
     print("Sending: " + message)
 
-    requests.post('https://slack.com/api/chat.postMessage', {
+    msg_response = requests.post('https://slack.com/api/chat.postMessage', {
         'token': os.environ['BOT_TOKEN'],
         'channel': SLACK_CHANNEL,
         'text': message,
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
+
+    print("RESPONSE FROM SLACK:")
+    print(msg_response)
 
     return message
 
