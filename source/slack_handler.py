@@ -1,11 +1,8 @@
-import os
 import logging
 import re
-import requests
-import json
-from utilities.error_block_builder import *
-from utilities.informational_block_builder import *
-import GreetUser
+from source.util.error_block_builder import *
+from source.util.informational_block_builder import *
+from source.GreetUser import *
 
 # Sending our replies here.
 SLACK_URL = "https://slack.com/api/chat.postMessage"

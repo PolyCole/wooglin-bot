@@ -1,4 +1,4 @@
-from base_block_element_factory import *
+from .base_block_element_factory import *
 from source.GreetUser import *
 
 
