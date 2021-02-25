@@ -138,9 +138,10 @@ def process_message(text, slack_event):
 
 
 def get_nlu_response(text):
-    return requests.post(os.environ['NLU_ADDRESS'], {
+    print("Sending text to the NLU engine...")
+    return requests.post(os.environ['NLU_ADDRESS'], json.dumps({
         "text": text
-    }).json()
+    })).json()
 
 
 # This process is significant. Due to the infrastructure serverless sets up,
