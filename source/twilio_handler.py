@@ -1,6 +1,5 @@
 import json
 
-
 def twilio_handler(event, context):
     body = {
         "message": "Roger roger Twilio, we read you loud and clear.",
