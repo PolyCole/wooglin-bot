@@ -1,0 +1,94 @@
+{
+  "text": "Hello there wooglin",
+  "intent": {
+    "id": 1606227240634633915,
+    "name": "greet",
+    "confidence": 0.8631133437156677
+  },
+  "entities": [],
+  "intent_ranking": [
+    {
+      "id": 1606227240634633915,
+      "name": "greet",
+      "confidence": 0.8631133437156677
+    },
+    {
+      "id": 8215701134961554739,
+      "name": "get_information",
+      "confidence": -0.9275047779083252
+    }
+  ],
+  "response_selector": {
+    "all_retrieval_intents": [],
+    "default": {
+      "response": {
+        "id": None,
+        "response_templates": None,
+        "confidence": 0.0,
+        "intent_response_key": None,
+        "template_name": "utter_None"
+      },
+      "ranking": []
+    }
+  },
+
+  "version": "2.3.3",
+  "status": "failure",
+  "message": "An unexpected error occurred. Error: Failed when parsing body as json",
+  "reason": "ParsingError",
+  "details": {},
+  "help": None,
+  "code": 500,
+
+  "token": "30L3puJ2gB4odEg8wWwkAkWM",
+  "team_id": "T3XHJSWMR",
+  "api_app_id": "ASG2WRG66",
+  "event": {
+    "client_msg_id": "0242DC7F-5EDF-4876-9761-D6FDFFFA3DCB",
+    "type": "app_mention",
+    "text": "<@USUCM0J7N> play funkytown",
+    "user": "UGZFWNPA8",
+    "ts": "1614183371.000400",
+    "team": "T3XHJSWMR",
+    "blocks": [
+      {
+        "type": "rich_text",
+        "block_id": "EPWBV",
+        "elements": [
+          {
+            "type": "rich_text_section",
+            "elements": [
+              {
+                "type": "user",
+                "user_id": "USUCM0J7N"
+              },
+              {
+                "type": "text",
+                "text": " play funkytown"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "channel": "GSYJF5RPY",
+    "event_ts": "1614183371.000400"
+  },
+  "type": "event_callback",
+  "event_id": "Ev01P7KS9RNX",
+  "event_time": 1614183371,
+  "authed_users": [
+    "USUCM0J7N"
+  ],
+  "authorizations": [
+    {
+      "enterprise_id": null,
+      "team_id": "T3XHJSWMR",
+      "user_id": "USUCM0J7N",
+      "is_bot": true,
+      "is_enterprise_install": false
+    }
+  ],
+  "is_ext_shared_channel": false,
+  "event_context": "1-app_mention-T3XHJSWMR-GSYJF5RPY"
+}

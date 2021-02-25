@@ -3,6 +3,9 @@ import logging
 import re
 import requests
 import json
+from utilities.error_block_builder import *
+from utilities.informational_block_builder import *
+import GreetUser
 
 # Sending our replies here.
 SLACK_URL = "https://slack.com/api/chat.postMessage"
@@ -90,11 +93,52 @@ def predefined_message_check(text, slack_event):
             return sendmessage("https://www.youtube.com/watch?v=s36eQwgPNSE")
         # Not a given response, let's send the message to NLP.
         else:
-            print("Un-implemented.")
-            # This gets more complicated.
-            # process_message(slack_event)
+            return process_message(text, slack_event)
     except Exception as e:
         return sendmessage("I've encountered an error: " + str(e))
+
+
+# Handles all messages that aren't predefined via wooglin-nlu.
+def process_message(text, slack_event):
+    nlu_response = get_nlu_response(text)
+
+    user = slack_event['user']
+
+    if 'status' in nlu_response and nlu_response['status'] == 'failure':
+        sendmessage(
+            "I'm sorry, I seem to have encountered an error when raising the NLU.",
+            get_nlu_error_block(nlu_response)
+        )
+        notify_cole("NLU Error encountered.", slack_event, get_nlu_error_block(nlu_response))
+        return "NLU ERROR"
+
+    # If the NLU was unable to accurately classify, let's tell the user we're confused.
+    try:
+        action = nlu_response['intent']['name']
+        confidence = nlu_response['intent']['confidence']
+    except KeyError:
+        action = "confused"
+        confidence = 0
+
+    # Routing.
+    if action == "confused" or confidence < 0.80 or action == "nlu_fallback":
+        sendmessage("I'm sorry, I don't quite understand.", get_doc_block())
+        notify_cole("NLU was confused on the following text. ", slack_event, get_nlu_confused_error_block(nlu_response))
+        return "NLU Confused"
+    elif action == "greet":
+        return sendmessage(GreetUser.greet(user))
+    # elif action == "database":
+    #     DatabaseHandler.dbhandler(resp, user)
+    # elif action == "sms":
+    #     SMSHandler.smshandler(resp)
+    else:
+        sendmessage("Whoops! It looks like that feature hasn't been hooked up yet.")
+
+
+def get_nlu_response(text):
+    return requests.post(os.environ['NLU_ADDRESS'], {
+        "text": text
+    }).json()
 
 
 # This process is significant. Due to the infrastructure serverless sets up,
@@ -139,3 +183,16 @@ def sendmessage(message, blocks=None):
     }).json()
 
     return message
+
+
+# Notify Cole in the event of an error.
+def notify_cole(message, slack_event, error_blocks):
+    blocks = notify_cole_error_block(slack_event, error_blocks)
+    requests.post('https://slack.com/api/chat.postMessage', {
+        'token': os.environ['BOT_TOKEN'],
+        'channel': os.environ['COLE_DM'],
+        'text': message,
+        'blocks': json.dumps(blocks)
+    }).json()
+
+
