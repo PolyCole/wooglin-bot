@@ -11,7 +11,7 @@ def get_markdown_block(text):
 def get_divider():
     return {
                "type": "divider"
-           },
+           }
 
 
 def get_text_fields_block(object):
