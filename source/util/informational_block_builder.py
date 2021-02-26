@@ -11,7 +11,7 @@ def get_doc_block():
                 "text": {
                     "type": "plain_text",
                     "text": "Read My Documentation :book:",
-                    "emoji": "true"
+                    "emoji": True
                 },
                 "value": "click_for_docs",
                 "url": "https://github.com/WooglinAlphaZeta/wooglin-bot",
