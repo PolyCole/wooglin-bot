@@ -31,6 +31,6 @@ def notify_cole_error_block(slack_event, existing_error_blocks):
     blocks.update(get_divider())
     blocks.update(get_text_fields_block(pertinent_information_from_slack))
     blocks.update(get_divider())
-    blocks.update(existing_error_blocks)
+    blocks.update(existing_error_blocks[0])
 
     return [blocks]
