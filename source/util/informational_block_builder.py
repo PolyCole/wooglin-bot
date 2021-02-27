@@ -4,7 +4,7 @@ def get_doc_block():
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Click on the button to see my documentation."
+                "text": "I'm sorry, I don't fully understand. Click to see my documentation."
             },
             "accessory": {
                 "type": "button",

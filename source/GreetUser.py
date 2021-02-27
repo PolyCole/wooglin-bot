@@ -33,6 +33,7 @@ def get_user_info(user_id):
         }
 
         user_data = requests.post(slack_users_url, body).json()
+        print("Slack user api returned: " + user_data)
 
         if 'ok' in user_data and user_data['ok'] is False:
             print("Error encountered when trying to interact with Users API: " + user_data['error'])
