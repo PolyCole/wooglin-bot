@@ -28,6 +28,12 @@ jobs:
           command: |
             sudo pip install nose
             sudo pip install coverage
+
+      - run:
+          name: Ensure critical dependencies are installed
+          command: |
+            sudo pip install slackblocks
+
       # this is slow. build a custom docker image and use that
       - run:
           name: Install node and npm
