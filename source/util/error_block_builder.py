@@ -1,23 +1,26 @@
-from .base_block_element_factory import *
+from .custom_block_elements import *
 from source.GreetUser import *
+from slackblocks import SectionBlock, DividerBlock, HeaderBlock
 
 
 def get_nlu_error_block(response):
-    blocks = {}
-    blocks.update(get_markdown_block(":red_circle: :brain: Wooglin-NLU Error :brain: :red_circle:"))
-    blocks.update(get_divider())
-    blocks.update(get_text_fields_block(response))
+    blocks = [
+        HeaderBlock(":red_circle: :brain: Wooglin-NLU Error :brain: :red_circle:"),
+        DividerBlock(),
+        SectionBlock("*_NLU Response_*", fields=get_text_fields(response))
+    ]
 
-    return [blocks]
+    return blocks
 
 
 def get_nlu_confused_error_block(response):
-    blocks = {}
-    blocks.update(get_markdown_block(":thinking_face: :brain: Wooglin-NLU Didn't Understand :brain: :question:"))
-    blocks.update(get_divider())
-    blocks.update(get_text_fields_block(response))
+    blocks = [
+        HeaderBlock(":thinking_face: :brain: Wooglin-NLU Didn't Understand :brain: :question:"),
+        DividerBlock(),
+        SectionBlock("*_NLU Response_*", fields=get_text_fields(response))
+    ]
 
-    return [blocks]
+    return blocks
 
 
 def notify_cole_error_block(slack_event, existing_error_blocks):
@@ -26,21 +29,14 @@ def notify_cole_error_block(slack_event, existing_error_blocks):
         "user": get_user_info(slack_event['user'])
     }
 
-    blocks = {}
-    blocks.update(get_markdown_block("Generic error output."))
-    print("BLOCKS 1")
-    print(blocks)
-    blocks.update(get_divider())
-    print("BLOCKS 2")
-    print(blocks)
-    blocks.update(get_text_fields_block(pertinent_information_from_slack))
-    print("BLOCKS 3")
-    print(blocks)
-    blocks.update(get_divider())
-    print("BLOCKS 4")
-    print(blocks)
-    blocks.update(existing_error_blocks[0])
-    print("BLOCKS 5")
-    print(blocks)
+    blocks = [
+        HeaderBlock("Error Output"),
+        DividerBlock(),
+        SectionBlock("*_Message Details_*", fields=get_text_fields(pertinent_information_from_slack)),
+        DividerBlock()
+    ]
 
-    return [blocks]
+    for block in existing_error_blocks:
+        blocks.append(block)
+
+    return blocks
