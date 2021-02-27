@@ -1,21 +1,23 @@
-from .base_block_element_factory import *
+from .custom_block_elements import *
 from source.GreetUser import *
+from slackblocks import SectionBlock, DividerBlock, HeaderBlock
 
 
 def get_nlu_error_block(response):
     blocks = [
-        get_markdown_block(":red_circle: :brain: Wooglin-NLU Error :brain: :red_circle:"),
-        get_divider(),
-        get_text_fields_block(response)
+        HeaderBlock(":red_circle: :brain: Wooglin-NLU Error :brain: :red_circle:"),
+        DividerBlock(),
+        SectionBlock("*_NLU Response_* :brain:", fields=get_text_fields(response))
     ]
 
     return blocks
 
+
 def get_nlu_confused_error_block(response):
     blocks = [
-        get_markdown_block(":thinking_face: :brain: Wooglin-NLU Didn't Understand :brain: :question:"),
-        get_divider(),
-        get_text_fields_block(response)
+        HeaderBlock(":thinking_face: :brain: Wooglin-NLU Didn't Understand :brain: :question:"),
+        DividerBlock(),
+        SectionBlock("*_NLU Response_* :brain:", fields=get_text_fields(response))
     ]
 
     return blocks
@@ -28,11 +30,13 @@ def notify_cole_error_block(slack_event, existing_error_blocks):
     }
 
     blocks = [
-        get_markdown_block("Generic error output."),
-        get_divider(),
-        get_text_fields_block(pertinent_information_from_slack),
-        get_divider(),
-        existing_error_blocks
+        HeaderBlock(":warning: Error Output :warning:"),
+        DividerBlock(),
+        SectionBlock("*_Message Details_* :speech_balloon:", fields=get_text_fields(pertinent_information_from_slack)),
+        DividerBlock()
     ]
+
+    for block in existing_error_blocks:
+        blocks.append(block)
 
     return blocks

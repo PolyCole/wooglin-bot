@@ -138,9 +138,10 @@ def process_message(text, slack_event):
 
 
 def get_nlu_response(text):
-    return requests.post(os.environ['NLU_ADDRESS'], {
+    print("Sending text to the NLU engine...")
+    return requests.post(os.environ['NLU_ADDRESS'], json.dumps({
         "text": text
-    }).json()
+    })).json()
 
 
 # This process is significant. Due to the infrastructure serverless sets up,
@@ -177,12 +178,15 @@ def strip_text(text):
 def sendmessage(message, blocks=None):
     print("Sending: " + message)
 
-    requests.post('https://slack.com/api/chat.postMessage', {
+    msg_response = requests.post('https://slack.com/api/chat.postMessage', {
         'token': os.environ['BOT_TOKEN'],
         'channel': SLACK_CHANNEL,
         'text': message,
-        'blocks': json.dumps(blocks) if blocks else None
+        'blocks': str(blocks) if blocks else None
     }).json()
+
+    print("RESPONSE FROM SLACK:")
+    print(msg_response)
 
     return message
 
@@ -194,7 +198,7 @@ def notify_cole(message, slack_event, error_blocks):
         'token': os.environ['BOT_TOKEN'],
         'channel': os.environ['COLE_DM'],
         'text': message,
-        'blocks': json.dumps(blocks)
+        'blocks': str(blocks)
     }).json()
 
 
