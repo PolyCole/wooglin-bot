@@ -182,7 +182,7 @@ def sendmessage(message, blocks=None):
         'token': os.environ['BOT_TOKEN'],
         'channel': SLACK_CHANNEL,
         'text': message,
-        'blocks': json.dumps(str(blocks)) if blocks else None
+        'blocks': str(blocks) if blocks else None
     }).json()
 
     print("RESPONSE FROM SLACK:")
@@ -198,7 +198,7 @@ def notify_cole(message, slack_event, error_blocks):
         'token': os.environ['BOT_TOKEN'],
         'channel': os.environ['COLE_DM'],
         'text': message,
-        'blocks': json.dumps(str(blocks))
+        'blocks': str(blocks)
     }).json()
 
 
