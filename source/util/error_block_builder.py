@@ -26,14 +26,21 @@ def notify_cole_error_block(slack_event, existing_error_blocks):
         "user": get_user_info(slack_event['user'])
     }
 
-    print("Pertinent information from slack")
-    print(pertinent_information_from_slack)
-
     blocks = {}
     blocks.update(get_markdown_block("Generic error output."))
+    print("BLOCKS 1")
+    print(blocks)
     blocks.update(get_divider())
+    print("BLOCKS 2")
+    print(blocks)
     blocks.update(get_text_fields_block(pertinent_information_from_slack))
+    print("BLOCKS 3")
+    print(blocks)
     blocks.update(get_divider())
+    print("BLOCKS 4")
+    print(blocks)
     blocks.update(existing_error_blocks[0])
+    print("BLOCKS 5")
+    print(blocks)
 
     return [blocks]

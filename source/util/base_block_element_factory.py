@@ -14,11 +14,11 @@ def get_divider():
            }
 
 
-def get_text_fields_block(object):
+def get_text_fields_block(data):
     base = {"type": "section"}
     fields = []
 
-    for item in object.items():
+    for item in data.items():
         key, value = item
         current_field = {"type": "mrkdwn", "text": "*" + key + "*: " + str(value)}
         fields.append(current_field)
