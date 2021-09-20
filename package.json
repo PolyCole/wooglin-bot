@@ -16,7 +16,8 @@
     "url": "https://github.com/WooglinAlphaZeta/wooglin-bot/issues"
   },
   "homepage": "https://github.com/WooglinAlphaZeta/wooglin-bot#readme",
-  "dependencies": {
-    "serverless-python-requirements": "^5.1.0"
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-python-requirements": "^5.1.1"
   }
 }
